@@ -1,0 +1,83 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "statement-ingestor"
+dynamic = ["version"]
+description = ''
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "Raphael Santana", email = "uroboros.phael@gmail.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "pdfplumber",
+]
+
+[project.urls]
+Documentation = "https://github.com/Raphael Santana/statement-ingestor#readme"
+Issues = "https://github.com/Raphael Santana/statement-ingestor/issues"
+Source = "https://github.com/Raphael Santana/statement-ingestor"
+
+[tool.hatch.version]
+path = "src/statement_ingestor/__about__.py"
+
+[tool.hatch.envs.types]
+extra-dependencies = [
+  "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/statement_ingestor tests}"
+
+[tool.hatch.envs.fmt]
+dependencies = [
+  "black>=24.0.0",
+]
+[tool.hatch.envs.fmt.scripts]
+check = "black --check {args:src/statement_ingestor tests}"
+fmt = "black {args:src/statement_ingestor tests}"
+
+[tool.hatch.envs.test]
+dependencies = [
+  "pytest",
+]
+[tool.hatch.envs.test.scripts]
+check = "pytest {args:tests}"
+
+[tool.black]
+line-length = 88
+target-version = ["py38"]
+include = '\.pyi?$'
+
+[tool.coverage.run]
+source_pkgs = ["statement_ingestor", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/statement_ingestor/__about__.py",
+]
+
+[tool.coverage.paths]
+statement_ingestor = ["src/statement_ingestor", "*/statement-ingestor/src/statement_ingestor"]
+tests = ["tests", "*/statement-ingestor/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]

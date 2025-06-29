@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+.hatch/
+.pytest_cache/
+.vscode/
+
+# Distribution / build
+.egg/
+.eggs/
+*.egg-info/
+build/
+dist/
+
+# Logs and temporary files
+*.log
+*.tmp
+*~

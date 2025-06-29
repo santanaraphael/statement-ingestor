@@ -1,5 +1,7 @@
 # Statement Ingestor
 
+[![CI Tests](https://github.com/santanaraphael/statement-ingestor/workflows/CI%20Tests/badge.svg)](https://github.com/santanaraphael/statement-ingestor/actions?query=workflow%3A%22CI+Tests%22)
+
 This project provides a tool to ingest bank statements from PDF files and extract transaction data.
 
 ## Installation

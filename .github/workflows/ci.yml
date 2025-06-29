@@ -18,4 +18,4 @@ jobs:
         hatch env create
     - name: Run tests
       run: |
-        hatch run test
+        hatch run test:check

@@ -17,7 +17,7 @@ class Card:
 
 
 @dataclass
-class Statement:
+class CreditCardStatement:
     due_date: datetime
     total_amount: Decimal
     cards: list[Card]

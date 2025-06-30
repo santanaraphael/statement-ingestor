@@ -3,7 +3,8 @@ import pdfplumber
 import re
 from datetime import datetime
 from decimal import Decimal
-from src.statement_ingestor.models import Transaction, Card, Statement
+from statement_ingestor.models import Transaction, Card, CreditCardStatement
+from collections import defaultdict
 
 
 def _parse_transaction(line: str) -> Transaction | None:
@@ -32,8 +33,6 @@ def _parse_transaction(line: str) -> Transaction | None:
 
     return Transaction(date=date, description=description, amount=amount)
 
-from collections import defaultdict
-
 
 def _extract_statement_lines(file_path: str) -> list[str]:
     with pdfplumber.open(file_path) as pdf:
@@ -45,7 +44,7 @@ def _extract_statement_lines(file_path: str) -> list[str]:
         return result
 
 
-def ingest_statement(file_path: str) -> Statement:
+def ingest_statement(file_path: str) -> CreditCardStatement:
     lines = _extract_statement_lines(file_path)
 
     header_index = next(
@@ -81,7 +80,9 @@ def ingest_statement(file_path: str) -> Statement:
     for card_number, transactions in transactions_by_card.items():
         cards.append(Card(card_number=card_number, transactions=transactions))
 
-    return Statement(due_date=due_date, total_amount=total_amount, cards=cards)
+    return CreditCardStatement(
+        due_date=due_date, total_amount=total_amount, cards=cards
+    )
 
 
 def _is_transaction_line(line: str) -> bool:

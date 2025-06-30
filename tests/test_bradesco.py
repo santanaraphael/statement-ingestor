@@ -1,12 +1,12 @@
 from unittest.mock import patch, MagicMock
-from src.statement_ingestor.bradesco import (
+from statement_ingestor.bradesco import (
     ingest_statement,
     _extract_card_number,
     _is_transaction_line,
     _parse_transaction,
     _extract_statement_lines,
 )
-from src.statement_ingestor.models import Transaction, Card, Statement
+from statement_ingestor.models import Transaction, CreditCardStatement
 from datetime import datetime
 from decimal import Decimal
 
@@ -22,10 +22,13 @@ def test_ingest_statement():
         "08/03 OUTRA COMPRA 50,00",
     ]
 
-    with patch('src.statement_ingestor.bradesco._extract_statement_lines', return_value=mock_pdf_content):
+    with patch(
+        "statement_ingestor.bradesco._extract_statement_lines",
+        return_value=mock_pdf_content,
+    ):
         statement = ingest_statement("dummy.pdf")
 
-        assert isinstance(statement, Statement)
+        assert isinstance(statement, CreditCardStatement)
         assert statement.due_date == datetime(2025, 1, 1)
         assert statement.total_amount == Decimal("100.00")
         assert len(statement.cards) == 2
@@ -50,7 +53,6 @@ def test_ingest_statement():
             description="OUTRA COMPRA",
             amount=Decimal("50.00"),
         )
-
 
 
 def test_extract_card_number():

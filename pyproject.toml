@@ -34,7 +34,7 @@ Issues = "https://github.com/Raphael Santana/statement-ingestor/issues"
 Source = "https://github.com/Raphael Santana/statement-ingestor"
 
 [tool.hatch.version]
-path = "src/statement_ingestor/__about__.py"
+path = "statement_ingestor/__about__.py"
 
 [tool.hatch.envs.types]
 extra-dependencies = [
@@ -48,8 +48,8 @@ dependencies = [
   "black>=24.0.0",
 ]
 [tool.hatch.envs.fmt.scripts]
-check = "black --check {args:src/statement_ingestor tests}"
-fmt = "black {args:src/statement_ingestor tests}"
+check = "black --check {args:statement_ingestor tests}"
+fmt = "black {args:statement_ingestor tests}"
 
 [tool.hatch.envs.test]
 dependencies = [
@@ -68,7 +68,7 @@ source_pkgs = ["statement_ingestor", "tests"]
 branch = true
 parallel = true
 omit = [
-  "src/statement_ingestor/__about__.py",
+  "statement_ingestor/__about__.py",
 ]
 
 [tool.coverage.paths]

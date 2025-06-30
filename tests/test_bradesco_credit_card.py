@@ -1,5 +1,5 @@
 from unittest.mock import patch, MagicMock
-from statement_ingestor.bradesco import (
+from statement_ingestor.bradesco_credit_card import (
     ingest_statement,
     _extract_card_number,
     _is_transaction_line,
@@ -23,7 +23,7 @@ def test_ingest_statement():
     ]
 
     with patch(
-        "statement_ingestor.bradesco._extract_statement_lines",
+        "statement_ingestor.bradesco_credit_card._extract_statement_lines",
         return_value=mock_pdf_content,
     ):
         statement = ingest_statement("dummy.pdf")

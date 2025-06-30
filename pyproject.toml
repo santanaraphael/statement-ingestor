@@ -34,22 +34,22 @@ Issues = "https://github.com/Raphael Santana/statement-ingestor/issues"
 Source = "https://github.com/Raphael Santana/statement-ingestor"
 
 [tool.hatch.version]
-path = "src/statement_ingestor/__about__.py"
+path = "statement_ingestor/__about__.py"
 
 [tool.hatch.envs.types]
 extra-dependencies = [
   "mypy>=1.0.0",
 ]
 [tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/statement_ingestor tests}"
+check = "mypy --install-types --non-interactive --explicit-package-bases statement_ingestor"
 
 [tool.hatch.envs.fmt]
 dependencies = [
   "black>=24.0.0",
 ]
 [tool.hatch.envs.fmt.scripts]
-check = "black --check {args:src/statement_ingestor tests}"
-fmt = "black {args:src/statement_ingestor tests}"
+check = "black --check {args:statement_ingestor tests}"
+fmt = "black {args:statement_ingestor tests}"
 
 [tool.hatch.envs.test]
 dependencies = [
@@ -68,11 +68,11 @@ source_pkgs = ["statement_ingestor", "tests"]
 branch = true
 parallel = true
 omit = [
-  "src/statement_ingestor/__about__.py",
+  "statement_ingestor/__about__.py",
 ]
 
 [tool.coverage.paths]
-statement_ingestor = ["src/statement_ingestor", "*/statement-ingestor/src/statement_ingestor"]
+statement_ingestor = ["statement_ingestor", "*/statement-ingestor/statement_ingestor"]
 tests = ["tests", "*/statement-ingestor/tests"]
 
 [tool.coverage.report]

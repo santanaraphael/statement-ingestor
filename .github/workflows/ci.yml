@@ -1,28 +1,38 @@
-name: CI Tests
+name: CI
 
 on: [push, pull_request]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
+
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.x'
-    - name: Cache Python dependencies
+        python-version: '3.11'
+
+    - name: Cache pip
       uses: actions/cache@v3
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
         restore-keys: |
           ${{ runner.os }}-pip-
-    - name: Install dependencies
+
+    - name: Upgrade pip and install Hatch
       run: |
         python -m pip install --upgrade pip
-        pip install hatch
-        hatch env create
-    - name: Run tests
-      run: |
-        hatch run test:check
+        pip install --upgrade hatch
+
+    - name: Run type checks (mypy)
+      run: hatch run types:check
+
+    - name: Run tests (pytest)
+      run: hatch run test:check
+
+    - name: Check formatting (black)
+      run: hatch run fmt:check

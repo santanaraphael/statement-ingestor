@@ -30,7 +30,7 @@ class NubankCreditCardParser(BaseParser):
             )
 
         start_date = min(t.date for t in transactions)
-        end_date = transactions[-1].date
+        end_date = max(t.date for t in transactions)
 
         return Statement(
             account_id="nubank_card_0000",

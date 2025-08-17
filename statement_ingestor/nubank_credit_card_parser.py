@@ -29,7 +29,7 @@ class NubankCreditCardParser(BaseParser):
                 end_date=None,
             )
 
-        start_date = transactions[0].date
+        start_date = min(t.date for t in transactions)
         end_date = transactions[-1].date
 
         return Statement(

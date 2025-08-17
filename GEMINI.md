@@ -8,3 +8,7 @@ When working in this repository, please follow these instructions:
 - To run type checks, use the command: `hatch run types:check`.
 - To run formatting checks, use the command: `hatch run fmt:check`.
 - To automatically fix formatting issues, use the command: `hatch run fmt:fmt`.
+
+# Git Best Practices
+
+- Avoid amending commits that have already been pushed to a remote branch, as this rewrites history and can cause issues for collaborators. If you must amend a pushed commit, use `git push --force-with-lease` with caution.

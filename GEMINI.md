@@ -8,6 +8,7 @@ When working in this repository, please follow these instructions:
 - To run type checks, use the command: `hatch run types:check`.
 - To run formatting checks, use the command: `hatch run fmt:check`.
 - To automatically fix formatting issues, use the command: `hatch run fmt:fmt`.
+- Always run the autoformatter (`hatch run fmt:fmt`) before committing your changes.
 
 # Git Best Practices
 

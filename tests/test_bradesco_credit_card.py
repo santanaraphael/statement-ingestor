@@ -13,7 +13,7 @@ from datetime import datetime, date
 def test_ingest_statement():
     mock_pdf_content = [
         "Data de Vencimento Total da Fatura R$",
-        "01/01/2025 100,00",
+        "VENCIMENTO 01/04/2025",
         "JOHN DOE Cartão 4066 XXXX XXXX 1234",
         "06/03 PAG BOLETO BANCARIO 1.234,56-",
         "07/03 COMPRA TESTE 100,00",
@@ -29,7 +29,7 @@ def test_ingest_statement():
         statement = parser.parse("dummy.pdf")
 
         assert isinstance(statement, Statement)
-        assert statement.account_id == "bradesco_credit_card_0000"
+        assert statement.account_id == "bradesco_credit_card_multi"
         assert statement.account_type == AccountType.CREDIT_CARD
         assert statement.start_date == date(2025, 3, 6)
         assert statement.end_date == date(2025, 3, 8)
@@ -41,25 +41,28 @@ def test_ingest_statement():
                 description="PAG BOLETO BANCARIO",
                 amount=-1234.56,
                 currency="BRL",
-                account_id="bradesco_credit_card_0000",
+                account_id="bradesco_credit_card_1234",
             ),
             Transaction(
                 date=date(2025, 3, 7),
                 description="COMPRA TESTE",
                 amount=100.00,
                 currency="BRL",
-                account_id="bradesco_credit_card_0000",
+                account_id="bradesco_credit_card_1234",
             ),
             Transaction(
                 date=date(2025, 3, 8),
                 description="OUTRA COMPRA",
                 amount=50.00,
                 currency="BRL",
-                account_id="bradesco_credit_card_0000",
+                account_id="bradesco_credit_card_5678",
             ),
         ]
 
-        assert statement.transactions == expected_transactions
+        # Sort both lists to ensure comparison is order-independent
+        assert sorted(statement.transactions, key=lambda t: t.date) == sorted(
+            expected_transactions, key=lambda t: t.date
+        )
 
 
 def test_ingest_statement_empty(tmp_path):
@@ -74,7 +77,7 @@ def test_ingest_statement_empty(tmp_path):
         statement = parser.parse(str(empty_file))
 
         assert isinstance(statement, Statement)
-        assert statement.account_id == "bradesco_credit_card_0000"
+        assert statement.account_id == "bradesco_credit_card_multi"
         assert statement.account_type == AccountType.CREDIT_CARD
         assert statement.transactions == []
         assert statement.start_date is None

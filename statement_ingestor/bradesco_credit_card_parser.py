@@ -14,17 +14,21 @@ class BradescoCreditCardParser(BaseParser):
         due_date = _extract_due_date(lines)
 
         transactions = []
-        account_id = "bradesco_credit_card_0000"  # Dummy account ID
+        current_card_number = "0000"  # Default card number
 
         for line in lines:
+            if card_number := _extract_card_number(line):
+                current_card_number = card_number
+
             if _is_transaction_line(line):
+                account_id = f"bradesco_credit_card_{current_card_number}"
                 transaction = _parse_transaction(line, account_id, due_date)
                 if transaction:
                     transactions.append(transaction)
 
         if not transactions:
             return Statement(
-                account_id=account_id,
+                account_id="bradesco_credit_card_multi",
                 account_type=AccountType.CREDIT_CARD,
                 transactions=[],
                 start_date=None,
@@ -35,7 +39,7 @@ class BradescoCreditCardParser(BaseParser):
         end_date = max(t.date for t in transactions)
 
         return Statement(
-            account_id=account_id,
+            account_id="bradesco_credit_card_multi",
             account_type=AccountType.CREDIT_CARD,
             transactions=transactions,
             start_date=start_date,

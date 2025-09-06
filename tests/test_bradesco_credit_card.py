@@ -122,4 +122,19 @@ def test_parse_transaction():
         currency="BRL",
         account_id="test_account_id",  # Dummy account ID for testing
     )
-    assert _parse_transaction(line, "test_account_id") == expected
+    assert _parse_transaction(line, "test_account_id", None) == expected
+
+
+def test_parse_transaction_year_boundary():
+    # Test case where statement spans across year-end
+    # Due date is in January, transaction is in December of previous year
+    line = "28/12 COMPRA DE NATAL 150,00"
+    due_date = date(2024, 1, 15)
+    expected = Transaction(
+        date=date(2023, 12, 28),
+        description="COMPRA DE NATAL",
+        amount=150.00,
+        currency="BRL",
+        account_id="test_account_id",
+    )
+    assert _parse_transaction(line, "test_account_id", due_date) == expected

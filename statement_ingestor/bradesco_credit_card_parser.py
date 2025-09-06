@@ -11,13 +11,14 @@ from collections import defaultdict
 class BradescoCreditCardParser(BaseParser):
     def parse(self, file_path: str) -> Statement:
         lines = _extract_statement_lines(file_path)
+        due_date = _extract_due_date(lines)
 
         transactions = []
         account_id = "bradesco_credit_card_0000"  # Dummy account ID
 
         for line in lines:
             if _is_transaction_line(line):
-                transaction = _parse_transaction(line, account_id)
+                transaction = _parse_transaction(line, account_id, due_date)
                 if transaction:
                     transactions.append(transaction)
 
@@ -42,7 +43,9 @@ class BradescoCreditCardParser(BaseParser):
         )
 
 
-def _parse_transaction(line: str, account_id: str) -> Transaction | None:
+def _parse_transaction(
+    line: str, account_id: str, due_date: Optional[date]
+) -> Transaction | None:
     match = re.match(
         r"""(?P<date>\d{2}/\d{2})\s+
         (?P<description>.*?)\s+
@@ -61,10 +64,16 @@ def _parse_transaction(line: str, account_id: str) -> Transaction | None:
     if is_negative:
         amount_str = "-" + amount_str[:-1]
 
-    # Assuming the year is the current year.
-    # This might need to be adjusted for statements spanning multiple years.
+    transaction_year = datetime.now().year
+    if due_date:
+        transaction_month = int(date_str.split("/")[1])
+        if transaction_month > due_date.month:
+            transaction_year = due_date.year - 1
+        else:
+            transaction_year = due_date.year
+
     transaction_date = datetime.strptime(
-        f"{date_str}/{datetime.now().year}", "%d/%m/%Y"
+        f"{date_str}/{transaction_year}", "%d/%m/%Y"
     ).date()
     amount = float(Decimal(amount_str.replace(".", "").replace(",", ".")))
 
@@ -75,6 +84,19 @@ def _parse_transaction(line: str, account_id: str) -> Transaction | None:
         currency="BRL",
         account_id=account_id,
     )
+
+
+def _extract_due_date(lines: list[str]) -> Optional[date]:
+    """
+    Extracts the statement due date from the statement lines.
+    It looks for a line containing "VENCIMENTO" and a date in dd/mm/yyyy format.
+    """
+    for line in lines:
+        if "VENCIMENTO" in line.upper():
+            match = re.search(r"(\d{2}/\d{2}/\d{4})", line)
+            if match:
+                return datetime.strptime(match.group(1), "%d/%m/%Y").date()
+    return None
 
 
 def _extract_statement_lines(file_path: str) -> list[str]:

@@ -14,3 +14,4 @@ When working in this repository, please follow these instructions:
 
 - Avoid amending commits that have already been pushed to a remote branch, as this rewrites history and can cause issues for collaborators. If you must amend a pushed commit, use `git push --force-with-lease` with caution.
 - Always pull after switching to the `master` branch.
+- Always open a pull request instead of pushing to `master` directly.
